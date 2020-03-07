@@ -13,7 +13,12 @@ class LocationItem extends Component {
   componentDidMount = () => {
     let date = new Date(this.props.data.timestamp);
     this.setState({
-      time: date.getHours() + ":" + date.getMinutes(),
+      time:
+        (date.getHours() > 12 ? date.getHours() - 12 : date.getHours()) +
+        ":" +
+        (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) +
+        " " +
+        (date.getHours() > 12 ? "PM" : "AM"),
       date:
         date.getMonth() +
         1 +
@@ -33,10 +38,9 @@ class LocationItem extends Component {
         }}
       >
         <View style={styles.mainContainer}>
-          {/* <Text>Logged at {this.props.data.timestamp}</Text>
-        <Text>Lat: {JSON.stringify(this.props.data.coords)}</Text> */}
           <View style={styles.date}>
             <Text>{this.props.index}</Text>
+            <Text>{this.state.time}</Text>
             <Text style={{ fontSize: 40, fontWeight: "bold" }}>
               {this.state.date}
             </Text>

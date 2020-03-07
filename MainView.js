@@ -43,9 +43,12 @@ class MainView extends Component {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <Header
-          // leftComponent={{ icon: "menu", color: "#fff" }}
+          leftComponent={{ icon: "settings", color: "#fff" }}
           centerComponent={{ text: "LOCATIONS", style: { color: "#fff" } }}
-          // rightComponent={{ icon: "home", color: "#fff" }}
+          rightComponent={{
+            icon: "file-upload",
+            color: "#fff"
+          }}
         />
         {this.state.loading ? (
           <ActivityIndicator />
