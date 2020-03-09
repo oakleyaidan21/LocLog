@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableOpacity
+} from "react-native";
 
 class LocationItem extends Component {
   constructor(props) {
@@ -18,25 +24,15 @@ class LocationItem extends Component {
         ":" +
         (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) +
         " " +
-        (date.getHours() > 12 ? "PM" : "AM"),
+        (date.getHours() >= 12 ? "PM" : "AM"),
       date:
-        date.getMonth() +
-        1 +
-        "/" +
-        (date.getDay() + 1) +
-        "/" +
-        date.getFullYear()
+        date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear()
     });
   };
 
   render() {
-    // console.log(this.props.data);
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          console.log(this.props);
-        }}
-      >
+      <TouchableOpacity onPress={() => {}}>
         <View style={styles.mainContainer}>
           <View style={styles.date}>
             <Text>{this.props.index}</Text>
@@ -50,7 +46,7 @@ class LocationItem extends Component {
             <Text>{this.props.data.coords.longitude}</Text>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   }
 }

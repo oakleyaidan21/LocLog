@@ -1,7 +1,7 @@
 import React from "react";
 import MainView from "./MainView";
 import { AsyncStorage } from "react-native";
-
+import { Notifications } from "expo";
 import * as TaskManager from "expo-task-manager";
 export default function App() {
   return <MainView />;
@@ -49,5 +49,20 @@ TaskManager.defineTask("fetchLoc", async ({ data, error }) => {
         console.log("error in adding new locations", error);
       }
     }
+    //send local notification saying data was recorded
+    await Notifications.createChannelAndroidAsync("locationRecorded", {
+      name: "Location Recorded",
+      sound: true
+    });
+    let noti = {
+      title: "Location Recorded",
+      body:
+        "Just letting you know, your location was just recorded in the background by LogLoc.",
+      android: {
+        color: "orange",
+        channelId: "locationRecorded"
+      }
+    };
+    await Notifications.presentLocalNotificationAsync(noti);
   }
 });
