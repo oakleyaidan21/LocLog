@@ -57,7 +57,7 @@ class MainView extends Component {
     );
     Location.startLocationUpdatesAsync("fetchLoc", {
       accuracy: Location.Accuracy.Low,
-      timeInterval: 300000,
+      timeInterval: 25200000, //7 hours in milliseconds
       distanceInterval: Platform.OS === "ios" ? 5 : 0,
       pausesUpdatesAutomatically: true
     });
