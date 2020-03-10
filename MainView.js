@@ -6,19 +6,28 @@ import {
   FlatList,
   AsyncStorage,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform,
+  View
 } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import LocationItem from "./components/LocationItem";
 import { Header, Icon } from "react-native-elements";
+import Modal, {
+  ModalContent,
+  ModalTitle,
+  SlideAnimation
+} from "react-native-modals";
 class MainView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       locations: [],
       loading: true,
-      addingLocation: false
+      addingLocation: false,
+      permissionGiven: false,
+      showSettingsModal: false
     };
   }
 
@@ -26,7 +35,7 @@ class MainView extends Component {
     this.setState({ addingLocation: true });
     await Location.getCurrentPositionAsync({}).then(async loc => {
       let newLocations = this.state.locations;
-      newLocations.unshift(loc);
+      newLocations.push(loc);
       //add to asyncStorage
       try {
         await AsyncStorage.setItem("locations", JSON.stringify(newLocations));
@@ -40,13 +49,16 @@ class MainView extends Component {
 
   componentDidMount = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === "granted") {
+      this.setState({ permissionGiven: true });
+    }
     let { notificationStatus } = await Permissions.askAsync(
       Permissions.NOTIFICATIONS
     );
     Location.startLocationUpdatesAsync("fetchLoc", {
       accuracy: Location.Accuracy.Low,
       timeInterval: 300000,
-      distanceInterval: 5,
+      distanceInterval: Platform.OS === "ios" ? 5 : 0,
       pausesUpdatesAutomatically: true
     });
 
@@ -54,43 +66,77 @@ class MainView extends Component {
     try {
       let value = await AsyncStorage.getItem("locations");
       if (value !== null) {
-        this.setState({ locations: JSON.parse(value).reverse() });
+        this.setState({
+          locations: JSON.parse(value).sort(function(a, b) {
+            return b.timestamp - a.timestamp;
+          })
+        });
       }
       this.setState({ loading: false });
     } catch (error) {
+      ``;
       console.log("error getting storage in mainview", error);
     }
   };
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
+        <Modal
+          modalTitle={<ModalTitle title="Settings" />}
+          visible={this.state.showSettingsModal}
+          onTouchOutside={() => {
+            this.setState({ showSettingsModal: false });
+          }}
+          modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
+        >
+          <ModalContent>
+            <Text>Settings will go here when they're done :)</Text>
+          </ModalContent>
+        </Modal>
         <Header
-          leftComponent={{ icon: "settings", color: "#fff" }}
+          leftComponent={
+            <Icon
+              name="settings"
+              color="#fff"
+              onPress={() => {
+                this.setState({ showSettingsModal: true });
+              }}
+            />
+          }
           centerComponent={{ text: "LOCATIONS", style: { color: "#fff" } }}
           rightComponent={{
             icon: "file-upload",
             color: "#fff"
           }}
         />
-        {this.state.loading ? (
-          <ActivityIndicator />
-        ) : this.state.locations.length === 0 ? (
-          <Text style={{ textAlign: "center", alignSelf: "center" }}>
-            No locations yet. Refresh the app and they'll appear
-          </Text>
-        ) : (
-          <FlatList
-            data={this.state.locations}
-            renderItem={({ item, index }) => (
-              <LocationItem data={item} index={index} />
-            )}
-            style={{
-              flex: 1,
-              width: "100%"
-            }}
-            keyExtractor={item => item.timestamp}
-          />
-        )}
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          {this.state.loading ? (
+            <ActivityIndicator />
+          ) : this.state.permissionGiven === false ? (
+            <Text style={{ textAlign: "center" }}>
+              Location Permissions not given. In order to use this app, you must
+              give this app location permissions all the time to utilize it.
+            </Text>
+          ) : this.state.locations.length === 0 ? (
+            <Text style={{ textAlign: "center", alignSelf: "center" }}>
+              No locations yet. Refresh the app and they'll appear
+            </Text>
+          ) : (
+            <FlatList
+              data={this.state.locations}
+              renderItem={({ item, index }) => (
+                <LocationItem data={item} index={index} />
+              )}
+              style={{
+                flex: 1,
+                width: "100%"
+              }}
+              keyExtractor={item => item.timestamp}
+            />
+          )}
+        </View>
         {this.state.locations.length > 0 && (
           <TouchableOpacity
             style={styles.plusButton}
@@ -122,7 +168,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: "lightblue",
+    backgroundColor: "#2089dc",
     alignItems: "center",
     justifyContent: "center"
   }

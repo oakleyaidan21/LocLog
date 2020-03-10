@@ -12,7 +12,8 @@ class LocationItem extends Component {
     super(props);
     this.state = {
       date: "",
-      time: ""
+      time: "",
+      height: 100
     };
   }
 
@@ -32,18 +33,48 @@ class LocationItem extends Component {
 
   render() {
     return (
-      <TouchableOpacity onPress={() => {}}>
-        <View style={styles.mainContainer}>
+      <TouchableOpacity
+        onPress={() => {
+          this.setState({ height: this.state.height === 100 ? 200 : 100 });
+        }}
+      >
+        <View style={[styles.mainContainer, { height: this.state.height }]}>
           <View style={styles.date}>
-            <Text>{this.props.index}</Text>
-            <Text>{this.state.time}</Text>
-            <Text style={{ fontSize: 40, fontWeight: "bold" }}>
+            {/* <Text>{this.props.index}</Text> */}
+            <Text style={{ fontSize: 35, fontWeight: "bold" }}>
               {this.state.date}
             </Text>
+            {this.state.height === 100 ? (
+              <></>
+            ) : (
+              <Text style={{ fontSize: 25 }}>{this.state.time}</Text>
+            )}
           </View>
           <View style={styles.location}>
-            <Text>{this.props.data.coords.latitude}</Text>
-            <Text>{this.props.data.coords.longitude}</Text>
+            {this.state.height === 100 ? (
+              <View>
+                <Text style={styles.collapsedData}>
+                  ({Math.round(this.props.data.coords.latitude * 100) / 100},
+                  {Math.round(this.props.data.coords.longitude * 100) / 100})
+                </Text>
+              </View>
+            ) : (
+              <View>
+                <Text>Latitude: {this.props.data.coords.latitude}</Text>
+                <Text>Longitude: {this.props.data.coords.longitude}</Text>
+                <Text>
+                  Altitude:{" "}
+                  {Math.round(this.props.data.coords.altitude * 10000000) /
+                    10000000}
+                </Text>
+                <Text>
+                  Heading:{" "}
+                  {Math.round(this.props.data.coords.heading * 10000000) /
+                    10000000}
+                </Text>
+                <Text>Speed: {Math.round(this.props.data.coords.speed)}</Text>
+              </View>
+            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -56,11 +87,11 @@ const styles = StyleSheet.create({
     width: "95%",
     borderColor: "black",
     borderWidth: 5,
-    height: 100,
     margin: 5,
     alignSelf: "center",
     flexDirection: "row",
-    borderRadius: 5
+    borderRadius: 5,
+    padding: 5
   },
   date: {
     flex: 1,
@@ -71,6 +102,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center"
+  },
+  collapsedData: {
+    fontSize: 25
   }
 });
 

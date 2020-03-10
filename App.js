@@ -60,7 +60,8 @@ TaskManager.defineTask("fetchLoc", async ({ data, error }) => {
         "Just letting you know, your location was just recorded in the background by LogLoc.",
       android: {
         color: "orange",
-        channelId: "locationRecorded"
+        channelId: "locationRecorded",
+        icon: "./assets/icon.png"
       }
     };
     await Notifications.presentLocalNotificationAsync(noti);
