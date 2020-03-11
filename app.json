@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Log Loc",
+    "name": "LocLog",
     "slug": "logLoc",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -18,7 +18,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.carrotcake.loclog",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.carrotcake.loclog",
+      "versionCode": 1
     }
   }
 }
