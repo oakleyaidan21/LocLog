@@ -56,8 +56,7 @@ TaskManager.defineTask("fetchLoc", async ({ data, error }) => {
     });
     let noti = {
       title: "Location Recorded",
-      body:
-        "Just letting you know, your location was just recorded in the background by LogLoc.",
+      body: "Your location was just recorded in the background by LogLoc.",
       android: {
         color: "orange",
         channelId: "locationRecorded",

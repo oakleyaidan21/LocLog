@@ -8,11 +8,13 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Platform,
-  View
+  View,
+  StatusBar
 } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import LocationItem from "./components/LocationItem";
+import Settings from "./components/Settings";
 import { Header, Icon } from "react-native-elements";
 import Modal, {
   ModalContent,
@@ -81,6 +83,15 @@ class MainView extends Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
+        {Platform.OS === "ios" ? (
+          <StatusBar
+            backgroundColor="blue"
+            barStyle="dark-content"
+            translucent
+          />
+        ) : (
+          <></>
+        )}
         <Modal
           modalTitle={<ModalTitle title="Settings" />}
           visible={this.state.showSettingsModal}
@@ -90,7 +101,11 @@ class MainView extends Component {
           modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
         >
           <ModalContent>
-            <Text>Settings will go here when they're done :)</Text>
+            <Settings
+              hide={() => {
+                this.setState({ showSettingsModal: false });
+              }}
+            />
           </ModalContent>
         </Modal>
         <Header
