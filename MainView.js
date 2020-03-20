@@ -164,7 +164,7 @@ class MainView extends Component {
               }}
             />
           }
-          centerComponent={{ text: "LOCATIONS", style: { color: "#fff" } }}
+          centerComponent={{ text: "LocLog", style: { color: "#fff" } }}
           rightComponent={
             <TouchableOpacity
               onPress={async () => {
@@ -191,7 +191,7 @@ class MainView extends Component {
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
           {this.state.loading ? (
-            <ActivityIndicator />
+            <ActivityIndicator size="large" color="#2089dc" />
           ) : this.state.permissionGiven === false ? (
             <Text style={{ textAlign: "center" }}>
               Location Permissions not given. In order to use this app, you must
@@ -226,9 +226,9 @@ class MainView extends Component {
             disabled={this.state.addingLocation}
           >
             {this.state.addingLocation ? (
-              <ActivityIndicator color={"black"} size="large" />
+              <ActivityIndicator color={"white"} />
             ) : (
-              <Icon name="add" size={40} />
+              <Icon name="add" size={40} color="white" />
             )}
           </TouchableOpacity>
         )}
