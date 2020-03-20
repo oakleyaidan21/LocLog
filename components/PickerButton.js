@@ -45,7 +45,7 @@ class PickerButton extends Component {
                 : "black",
               borderRadius: 5,
               margin: 5,
-              padding: 20,
+              padding: 10,
               backgroundColor: this.state.selected[index]
                 ? this.props.selectedColor
                 : "transparent"

@@ -32,7 +32,8 @@ class MainView extends Component {
       addingLocation: false,
       permissionGiven: false,
       showSettingsModal: false,
-      showCSVModal: false
+      distanceInterval: 0,
+      timeInterval: 0
     };
   }
 
@@ -76,30 +77,47 @@ class MainView extends Component {
     let { notificationStatus } = await Permissions.askAsync(
       Permissions.NOTIFICATIONS
     );
-    Location.startLocationUpdatesAsync("fetchLoc", {
-      accuracy: Location.Accuracy.Low,
-      timeInterval: 25200000, //7 hours in milliseconds
-      distanceInterval: Platform.OS === "ios" ? 5 : 0,
-      pausesUpdatesAutomatically: true
-    });
 
-    //get localstorage
+    let timeInt = 0;
+    let distInt = 0;
+
+    //get locations and settings from local storage
     try {
-      let value = await AsyncStorage.getItem("locations");
-      if (value !== null) {
+      let locations = await AsyncStorage.getItem("locations");
+      if (locations !== null) {
         this.setState({
-          locations: JSON.parse(value).sort(function(a, b) {
+          locations: JSON.parse(locations).sort(function(a, b) {
             return b.timestamp - a.timestamp;
           })
         });
       }
-      this.setState({ loading: false });
+      timeInt = await AsyncStorage.getItem("timeInterval");
+      distInt = await AsyncStorage.getItem("distanceInterval");
+      if (timeInt !== null) {
+        this.setState({
+          timeInterval: parseInt(timeInt),
+          distanceInterval: parseInt(distInt)
+        });
+      } else {
+        //first time setup for settings
+        await AsyncStorage.setItem("timeInterval", "360");
+        await AsyncStorage.setItem("distanceInterval", "5");
+        timeInt = 360;
+        distInt = 5;
+      }
     } catch (error) {
-      ``;
       console.log("error getting storage in mainview", error);
     }
+    this.setState({ loading: false });
+    Location.startLocationUpdatesAsync("fetchLoc", {
+      accuracy: Location.Accuracy.Low,
+      timeInterval: parseInt(timeInt) * 60000, //7 hours in milliseconds
+      distanceInterval: Platform.OS === "ios" ? parseInt(distInt) * 1000 : 0, //in km
+      pausesUpdatesAutomatically: true
+    });
   };
   render() {
+    console.log(this.state.timeInterval, this.state.distanceInterval);
     return (
       <SafeAreaView style={styles.mainContainer}>
         {Platform.OS === "ios" ? (
@@ -124,21 +142,18 @@ class MainView extends Component {
               hide={() => {
                 this.setState({ showSettingsModal: false });
               }}
+              changeSettings={async (time, distance) => {
+                try {
+                  await AsyncStorage.setItem("timeInterval", time);
+                  await AsyncStorage.setItem("distanceInterval", distance);
+                } catch (error) {
+                  console.log("error setting new settings", error);
+                }
+              }}
             />
           </ModalContent>
         </Modal>
-        <Modal
-          modalTitle={<ModalTitle title="Exporting..." />}
-          visible={this.state.showCSVModal}
-          onTouchOutside={() => {
-            this.setState({ showCSVModal: false });
-          }}
-          modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
-        >
-          <ModalContent>
-            <ActivityIndicator style={{ alignSelf: "center" }} />
-          </ModalContent>
-        </Modal>
+
         <Header
           leftComponent={
             <Icon
@@ -153,14 +168,19 @@ class MainView extends Component {
           rightComponent={
             <TouchableOpacity
               onPress={async () => {
-                // this.setState({ showCSVModal: true });
-                //convert state to CSV
-                let csv = this.convertToCSV();
-                // send in an email
-                await MailComposer.composeAsync({
-                  subject: "Location Data from LocLog",
-                  body: csv
-                });
+                if (this.state.locations.length === 0) {
+                  alert(
+                    "No locations to export yet! Try clearing the app in the dock and reloading"
+                  );
+                } else {
+                  //convert state to CSV
+                  let csv = this.convertToCSV();
+                  // send in an email
+                  await MailComposer.composeAsync({
+                    subject: "Location Data from LocLog",
+                    body: csv
+                  });
+                }
               }}
             >
               <Icon name="file-upload" color="#fff" />
@@ -191,7 +211,9 @@ class MainView extends Component {
                 flex: 1,
                 width: "100%"
               }}
-              keyExtractor={item => item.timestamp}
+              keyExtractor={item =>
+                item.timestamp + item.coords.latitude + item.coords.longitude
+              }
             />
           )}
         </View>
@@ -204,7 +226,7 @@ class MainView extends Component {
             disabled={this.state.addingLocation}
           >
             {this.state.addingLocation ? (
-              <ActivityIndicator color={"black"} />
+              <ActivityIndicator color={"black"} size="large" />
             ) : (
               <Icon name="add" size={40} />
             )}

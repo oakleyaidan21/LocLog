@@ -6,8 +6,8 @@ class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTime: "none",
-      selectedDistance: "none"
+      selectedTime: "0",
+      selectedDistance: "0"
     };
   }
   render() {
@@ -38,14 +38,24 @@ class Settings extends Component {
               { backgroundColor: "#2089dc", borderColor: "#2089dc" }
             ]}
             onPress={() => {
+              //deal with local storage settings
+              this.props.changeSettings(
+                this.state.selectedTime,
+                this.state.selectedDistance
+              );
               this.props.hide();
             }}
+            disabled={
+              this.state.selectedTime === "0" ||
+              this.state.selectedDistance === "0"
+            }
           >
             <Text style={{ color: "white" }}>Apply</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.bottomButton}
             onPress={() => {
+              //do nothing, cancel
               this.props.hide();
             }}
           >
