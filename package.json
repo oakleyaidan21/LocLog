@@ -18,7 +18,8 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-elements": "^1.2.7",
     "react-native-modals": "^0.19.9",
-    "react-native-web": "~0.11.7"
+    "react-native-web": "~0.11.7",
+    "expo-mail-composer": "~8.0.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",

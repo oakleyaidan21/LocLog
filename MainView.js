@@ -21,6 +21,8 @@ import Modal, {
   ModalTitle,
   SlideAnimation
 } from "react-native-modals";
+import * as MailComposer from "expo-mail-composer";
+
 class MainView extends Component {
   constructor(props) {
     super(props);
@@ -29,9 +31,26 @@ class MainView extends Component {
       loading: true,
       addingLocation: false,
       permissionGiven: false,
-      showSettingsModal: false
+      showSettingsModal: false,
+      showCSVModal: false
     };
   }
+
+  convertToCSV = () => {
+    var json = this.state.locations;
+    var fields = Object.keys(json[0].coords);
+    fields.push("timestamp(unix)");
+    let csv = "";
+    for (let i = 0; i < json.length; i++) {
+      let row = "";
+      for (let j = 0; j < Object.keys(json[i].coords).length; j++) {
+        row += json[i].coords[Object.keys(json[i].coords)[j]].toString() + ",";
+      }
+      csv += row + json[i].timestamp.toString() + "\n";
+    }
+    fields = fields.join(",");
+    return fields + "\n" + csv;
+  };
 
   oneTimeLocation = async () => {
     this.setState({ addingLocation: true });
@@ -108,6 +127,18 @@ class MainView extends Component {
             />
           </ModalContent>
         </Modal>
+        <Modal
+          modalTitle={<ModalTitle title="Exporting..." />}
+          visible={this.state.showCSVModal}
+          onTouchOutside={() => {
+            this.setState({ showCSVModal: false });
+          }}
+          modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
+        >
+          <ModalContent>
+            <ActivityIndicator style={{ alignSelf: "center" }} />
+          </ModalContent>
+        </Modal>
         <Header
           leftComponent={
             <Icon
@@ -119,10 +150,22 @@ class MainView extends Component {
             />
           }
           centerComponent={{ text: "LOCATIONS", style: { color: "#fff" } }}
-          rightComponent={{
-            icon: "file-upload",
-            color: "#fff"
-          }}
+          rightComponent={
+            <TouchableOpacity
+              onPress={async () => {
+                // this.setState({ showCSVModal: true });
+                //convert state to CSV
+                let csv = this.convertToCSV();
+                // send in an email
+                await MailComposer.composeAsync({
+                  subject: "Location Data from LocLog",
+                  body: csv
+                });
+              }}
+            >
+              <Icon name="file-upload" color="#fff" />
+            </TouchableOpacity>
+          }
         />
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
