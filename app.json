@@ -21,7 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.carrotcake.logloc",
-      "buildNumber": "1.0.2",
+      "buildNumber": "2",
       "infoPlist": {
         "UIBackgroundModes": ["location", "fetch"]
       },
@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.carrotcake.logloc",
-      "versionCode": 3,
+      "versionCode": 4,
       "publishBundlePath": "android/app/src/main/assets/shell-app.bundle",
       "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
     },
