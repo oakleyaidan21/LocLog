@@ -176,7 +176,7 @@ class MainView extends Component {
             <Text
               style={{ color: "white", fontFamily: "digitalt", fontSize: 30 }}
             >
-              LogLoc
+              LocLog
             </Text>
           }
           rightComponent={
