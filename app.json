@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "LocLog",
-    "slug": "locLog",
+    "name": "LogLoc",
+    "slug": "logLoc",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "default",
     "icon": "./assets/logo.png",
     "splash": {
@@ -21,7 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.carrotcake.logloc",
-      "buildNumber": "1.0.1",
+      "buildNumber": "1.0.2",
       "infoPlist": {
         "UIBackgroundModes": ["location", "fetch"]
       },
@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.carrotcake.logloc",
-      "versionCode": 2,
+      "versionCode": 3,
       "publishBundlePath": "android/app/src/main/assets/shell-app.bundle",
       "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
     },
