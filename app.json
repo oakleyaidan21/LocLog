@@ -4,11 +4,7 @@
     "slug": "logLoc",
     "privacy": "public",
     "sdkVersion": "36.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/logo.png",
@@ -17,21 +13,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#2089dc"
     },
+    "backgroundColor": "#FFFFFF",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.carrotcake.logloc",
       "buildNumber": "1.0.0",
       "infoPlist": {
-        "UIBackgroundModes": [
-          "location",
-          "fetch"
-        ]
+        "UIBackgroundModes": ["location", "fetch"]
       },
       "publishBundlePath": "ios/logloc/Supporting/shell-app.bundle",
       "publishManifestPath": "ios/logloc/Supporting/shell-app-manifest.json"

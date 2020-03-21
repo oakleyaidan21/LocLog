@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  SafeAreaView,
   Text,
   StyleSheet,
   FlatList,
@@ -9,7 +8,8 @@ import {
   TouchableOpacity,
   Platform,
   View,
-  StatusBar
+  StatusBar,
+  Image
 } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
@@ -22,7 +22,7 @@ import Modal, {
   SlideAnimation
 } from "react-native-modals";
 import * as MailComposer from "expo-mail-composer";
-import * as Font from "expo-font";
+
 import BackgroundTimer from "react-native-background-timer";
 import { Notifications } from "expo";
 
@@ -112,11 +112,6 @@ class MainView extends Component {
   };
 
   componentDidMount = async () => {
-    //load fonts
-    // await Font.loadAsync({
-    //   digitalt: require("./assets/fonts/Digitalt-04no.ttf")
-    // });
-
     //ask permissions
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
@@ -165,11 +160,11 @@ class MainView extends Component {
   render() {
     console.log(this.state.timeInterval, this.state.distanceInterval);
     return (
-      <SafeAreaView style={styles.mainContainer}>
+      <View style={styles.mainContainer}>
         {Platform.OS === "ios" ? (
           <StatusBar
             backgroundColor="blue"
-            barStyle="dark-content"
+            barStyle="light-content"
             translucent
           />
         ) : (
@@ -219,7 +214,10 @@ class MainView extends Component {
             </TouchableOpacity>
           }
           centerComponent={
-            <Text style={{ color: "white", fontSize: 30 }}>LocLog</Text>
+            <Image
+              style={{ width: 40, height: 40 }}
+              source={require("./assets/logo.png")}
+            />
           }
           rightComponent={
             <TouchableOpacity
@@ -291,7 +289,7 @@ class MainView extends Component {
             )}
           </TouchableOpacity>
         )}
-      </SafeAreaView>
+      </View>
     );
   }
 }
