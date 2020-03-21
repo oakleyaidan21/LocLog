@@ -1,4 +1,4 @@
-# LocLoc
+# LogLoc
 
 A single-view application for showing a user their own location data. Fetches a users location in the background and logs it for them to see.
 
@@ -15,7 +15,7 @@ Branches:
 
 1. have app show latest locations without needing to refresh
 2. export to csv file instead (or in addition to) email
-3. Think of a new name since "LocLog" is already taken
+3. ~~Think of a new name since "LocLog" is already taken~~
 4. Fix warnings
 5. Show map of locations marked (stretch)
 6. Work on ejected version (stretch)

@@ -164,7 +164,7 @@ class MainView extends Component {
               }}
             />
           }
-          centerComponent={{ text: "LocLog", style: { color: "#fff" } }}
+          centerComponent={{ text: "LogLoc", style: { color: "#fff" } }}
           rightComponent={
             <TouchableOpacity
               onPress={async () => {
@@ -177,7 +177,7 @@ class MainView extends Component {
                   let csv = this.convertToCSV();
                   // send in an email
                   await MailComposer.composeAsync({
-                    subject: "Location Data from LocLog",
+                    subject: "Location Data from LogLoc",
                     body: csv
                   });
                 }
