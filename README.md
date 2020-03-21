@@ -10,3 +10,12 @@ Branches:
 - cons: cannot set a background fetch time interval for ios.
 
 `ejected`: uses the `react-native-background-timer` package. pros and cons are basically the opposite of `expo`'s
+
+## To-Do
+
+1. have app show latest locations without needing to refresh
+2. export to csv file instead (or in addition to) email
+3. Think of a new name since "LocLog" is already taken
+4. Fix warnings
+5. Show map of locations marked (stretch)
+6. Work on ejected version (stretch)
