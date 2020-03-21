@@ -22,6 +22,7 @@ import Modal, {
   SlideAnimation
 } from "react-native-modals";
 import * as MailComposer from "expo-mail-composer";
+import * as Font from "expo-font";
 
 class MainView extends Component {
   constructor(props) {
@@ -70,6 +71,12 @@ class MainView extends Component {
   };
 
   componentDidMount = async () => {
+    //load fonts
+    Font.loadAsync({
+      digitalt: require("./assets/fonts/Digitalt-04no.ttf")
+    });
+
+    //ask permissions
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status === "granted") {
       this.setState({ permissionGiven: true });
@@ -116,6 +123,7 @@ class MainView extends Component {
       pausesUpdatesAutomatically: true
     });
   };
+
   render() {
     console.log(this.state.timeInterval, this.state.distanceInterval);
     return (
@@ -164,7 +172,13 @@ class MainView extends Component {
               }}
             />
           }
-          centerComponent={{ text: "LogLoc", style: { color: "#fff" } }}
+          centerComponent={
+            <Text
+              style={{ color: "white", fontFamily: "digitalt", fontSize: 30 }}
+            >
+              LogLoc
+            </Text>
+          }
           rightComponent={
             <TouchableOpacity
               onPress={async () => {
