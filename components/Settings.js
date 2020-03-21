@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import PickerButton from "./PickerButton";
+import { CheckBox } from "react-native-elements";
 
 class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedTime: "0",
-      selectedDistance: "0"
+      selectedDistance: "0",
+      checked: true
     };
   }
   render() {
@@ -31,19 +33,24 @@ class Settings extends Component {
           selectedColor="#2089dc"
           selectedTextColor="white"
         />
+        <CheckBox
+          title="Send notifications?"
+          checked={this.state.checked}
+          onPress={() => this.setState({ checked: !this.state.checked })}
+        />
         <View style={styles.bottomButtonContainer}>
           <TouchableOpacity
             style={[
               styles.bottomButton,
               {
                 backgroundColor:
-                  this.state.selectedTime === "0" ||
-                  this.state.selectedDistance === "0"
+                  this.state.selectedTime === 0 ||
+                  this.state.selectedDistance === 0
                     ? "grey"
                     : "#2089dc",
                 borderColor:
-                  this.state.selectedTime === "0" ||
-                  this.state.selectedDistance === "0"
+                  this.state.selectedTime === 0 ||
+                  this.state.selectedDistance === 0
                     ? "grey"
                     : "#2089dc"
               }
@@ -52,7 +59,8 @@ class Settings extends Component {
               //deal with local storage settings
               this.props.changeSettings(
                 this.state.selectedTime,
-                this.state.selectedDistance
+                this.state.selectedDistance,
+                this.state.checked
               );
               this.props.hide();
             }}

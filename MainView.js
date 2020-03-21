@@ -40,7 +40,7 @@ class MainView extends Component {
     };
   }
 
-  setTimer = async minutes => {
+  setTimer = async (minutes, checked) => {
     BackgroundTimer.runBackgroundTimer(async () => {
       //get locations
       await Location.getCurrentPositionAsync({}).then(async loc => {
@@ -63,7 +63,10 @@ class MainView extends Component {
             icon: "./assets/icon.png"
           }
         };
-        await Notifications.presentLocalNotificationAsync(noti);
+        if (checked) {
+          await Notifications.presentLocalNotificationAsync(noti);
+        }
+
         //add to state
         this.setState({ locations: newLocations });
       });
@@ -72,7 +75,7 @@ class MainView extends Component {
 
   onFirstOpen = async () => {
     //setup background timer
-    this.setTimer(60);
+    this.setTimer(60, true);
     this.oneTimeLocation();
     alert(
       "Your location will be marked down every 60 minutes. You can change this using the settings modal in the top left."
@@ -183,11 +186,11 @@ class MainView extends Component {
               hide={() => {
                 this.setState({ showSettingsModal: false });
               }}
-              changeSettings={async (time, distance) => {
+              changeSettings={async (time, distance, checked) => {
                 //stop background timer
                 BackgroundTimer.stopBackgroundTimer();
                 //start new one with new timer
-                this.setTimer(time);
+                this.setTimer(time, checked);
                 try {
                   await AsyncStorage.setItem("timeInterval", time);
                   await AsyncStorage.setItem("distanceInterval", distance);
@@ -230,10 +233,17 @@ class MainView extends Component {
                   //convert state to CSV
                   let csv = this.convertToCSV();
                   // send in an email
-                  await MailComposer.composeAsync({
-                    subject: "Location Data from LogLoc",
-                    body: csv
-                  });
+                  try {
+                    await MailComposer.composeAsync({
+                      subject: "Location Data from LogLoc",
+                      body: csv
+                    });
+                  } catch (error) {
+                    console.log("error sending email", error);
+                    alert(
+                      "you must set up your mail application in order to use this feature"
+                    );
+                  }
                 }
               }}
             >
@@ -266,10 +276,12 @@ class MainView extends Component {
                 width: "100%"
               }}
               keyExtractor={(item, index) =>
-                item.timestamp +
-                item.coords.latitude +
-                item.coords.longitude +
-                index
+                (
+                  item.timestamp +
+                  item.coords.latitude +
+                  item.coords.longitude +
+                  index
+                ).toString()
               }
             />
           )}
