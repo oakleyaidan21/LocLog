@@ -23,6 +23,8 @@ import Modal, {
 } from "react-native-modals";
 import * as MailComposer from "expo-mail-composer";
 import * as Font from "expo-font";
+import BackgroundTimer from "react-native-background-timer";
+import { Notifications } from "expo";
 
 class MainView extends Component {
   constructor(props) {
@@ -37,6 +39,45 @@ class MainView extends Component {
       timeInterval: 0
     };
   }
+
+  setTimer = async minutes => {
+    BackgroundTimer.runBackgroundTimer(async () => {
+      //get locations
+      await Location.getCurrentPositionAsync({}).then(async loc => {
+        let newLocations = this.state.locations;
+        newLocations.push(loc);
+        console.log("getting location!");
+        //add to asyncStorage
+        try {
+          await AsyncStorage.setItem("locations", JSON.stringify(newLocations));
+        } catch (error) {
+          console.log("error adding one time location", error);
+        }
+        //send notification
+        let noti = {
+          title: "Location Recorded",
+          body: "Your location was just recorded in the background by LogLoc.",
+          android: {
+            color: "orange",
+            channelId: "locationRecorded",
+            icon: "./assets/icon.png"
+          }
+        };
+        await Notifications.presentLocalNotificationAsync(noti);
+        //add to state
+        this.setState({ locations: newLocations });
+      });
+    }, minutes * 60000); //60 minutes will be the default
+  };
+
+  onFirstOpen = async () => {
+    //setup background timer
+    this.setTimer(60);
+    this.oneTimeLocation();
+    alert(
+      "Your location will be marked down every 60 minutes. You can change this using the settings modal in the top left."
+    );
+  };
 
   convertToCSV = () => {
     var json = this.state.locations;
@@ -72,9 +113,9 @@ class MainView extends Component {
 
   componentDidMount = async () => {
     //load fonts
-    Font.loadAsync({
-      digitalt: require("./assets/fonts/Digitalt-04no.ttf")
-    });
+    // await Font.loadAsync({
+    //   digitalt: require("./assets/fonts/Digitalt-04no.ttf")
+    // });
 
     //ask permissions
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -97,6 +138,9 @@ class MainView extends Component {
             return b.timestamp - a.timestamp;
           })
         });
+      } else {
+        //setup first timer
+        this.onFirstOpen();
       }
       timeInt = await AsyncStorage.getItem("timeInterval");
       distInt = await AsyncStorage.getItem("distanceInterval");
@@ -107,7 +151,7 @@ class MainView extends Component {
         });
       } else {
         //first time setup for settings
-        await AsyncStorage.setItem("timeInterval", "360");
+        await AsyncStorage.setItem("timeInterval", "60");
         await AsyncStorage.setItem("distanceInterval", "5");
         timeInt = 360;
         distInt = 5;
@@ -116,12 +160,6 @@ class MainView extends Component {
       console.log("error getting storage in mainview", error);
     }
     this.setState({ loading: false });
-    Location.startLocationUpdatesAsync("fetchLoc", {
-      accuracy: Location.Accuracy.Low,
-      timeInterval: parseInt(timeInt) * 60000, //7 hours in milliseconds
-      distanceInterval: Platform.OS === "ios" ? parseInt(distInt) * 1000 : 0, //in km
-      pausesUpdatesAutomatically: true
-    });
   };
 
   render() {
@@ -151,12 +189,20 @@ class MainView extends Component {
                 this.setState({ showSettingsModal: false });
               }}
               changeSettings={async (time, distance) => {
+                //stop background timer
+                BackgroundTimer.stopBackgroundTimer();
+                //start new one with new timer
+                this.setTimer(time);
                 try {
                   await AsyncStorage.setItem("timeInterval", time);
                   await AsyncStorage.setItem("distanceInterval", distance);
                 } catch (error) {
                   console.log("error setting new settings", error);
                 }
+                this.setState({
+                  timeInterval: time,
+                  distanceInterval: distance
+                });
               }}
             />
           </ModalContent>
@@ -164,20 +210,16 @@ class MainView extends Component {
 
         <Header
           leftComponent={
-            <Icon
-              name="settings"
-              color="#fff"
+            <TouchableOpacity
               onPress={() => {
                 this.setState({ showSettingsModal: true });
               }}
-            />
+            >
+              <Icon name="settings" color="#fff" />
+            </TouchableOpacity>
           }
           centerComponent={
-            <Text
-              style={{ color: "white", fontFamily: "digitalt", fontSize: 30 }}
-            >
-              LocLog
-            </Text>
+            <Text style={{ color: "white", fontSize: 30 }}>LocLog</Text>
           }
           rightComponent={
             <TouchableOpacity
@@ -225,8 +267,11 @@ class MainView extends Component {
                 flex: 1,
                 width: "100%"
               }}
-              keyExtractor={item =>
-                item.timestamp + item.coords.latitude + item.coords.longitude
+              keyExtractor={(item, index) =>
+                item.timestamp +
+                item.coords.latitude +
+                item.coords.longitude +
+                index
               }
             />
           )}

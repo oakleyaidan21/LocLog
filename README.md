@@ -19,3 +19,5 @@ Branches:
 4. Fix warnings
 5. Show map of locations marked (stretch)
 6. Work on ejected version (stretch)
+7. Have the ios status bar match the header bar
+8. Improve UI

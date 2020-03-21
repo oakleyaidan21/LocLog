@@ -35,7 +35,18 @@ class Settings extends Component {
           <TouchableOpacity
             style={[
               styles.bottomButton,
-              { backgroundColor: "#2089dc", borderColor: "#2089dc" }
+              {
+                backgroundColor:
+                  this.state.selectedTime === "0" ||
+                  this.state.selectedDistance === "0"
+                    ? "grey"
+                    : "#2089dc",
+                borderColor:
+                  this.state.selectedTime === "0" ||
+                  this.state.selectedDistance === "0"
+                    ? "grey"
+                    : "#2089dc"
+              }
             ]}
             onPress={() => {
               //deal with local storage settings
