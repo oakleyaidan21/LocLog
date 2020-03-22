@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   Platform,
   View,
-  StatusBar
+  StatusBar,
+  Image
 } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
@@ -122,12 +123,13 @@ class MainView extends Component {
       distanceInterval: Platform.OS === "ios" ? parseInt(distInt) * 1000 : 0, //in km
       pausesUpdatesAutomatically: true
     });
+    this.oneTimeLocation();
   };
 
   render() {
     console.log(this.state.timeInterval, this.state.distanceInterval);
     return (
-      <SafeAreaView style={styles.mainContainer}>
+      <View style={styles.mainContainer}>
         {Platform.OS === "ios" ? (
           <StatusBar
             backgroundColor="blue"
@@ -173,11 +175,10 @@ class MainView extends Component {
             />
           }
           centerComponent={
-            <Text
-              style={{ color: "white", fontFamily: "digitalt", fontSize: 30 }}
-            >
-              LocLog
-            </Text>
+            <Image
+              style={{ width: 50, height: 50 }}
+              source={require("./assets/logo.png")}
+            />
           }
           rightComponent={
             <TouchableOpacity
@@ -246,7 +247,7 @@ class MainView extends Component {
             )}
           </TouchableOpacity>
         )}
-      </SafeAreaView>
+      </View>
     );
   }
 }
