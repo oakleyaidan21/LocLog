@@ -1,7 +1,14 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TextInput
+} from "react-native";
 import PickerButton from "./PickerButton";
 import { CheckBox } from "react-native-elements";
+import NumberPicker from "./NumberPicker";
 
 class Settings extends Component {
   constructor(props) {
@@ -16,22 +23,22 @@ class Settings extends Component {
     return (
       <View style={styles.mainContainer}>
         <Text>Tracking Time Interval (in minutes):</Text>
-        <PickerButton
-          data={["60", "120", "240", "360", "720", "1440"]}
-          onSelection={selected => {
-            this.setState({ selectedTime: selected });
+        <NumberPicker
+          min={15}
+          max={720}
+          title={"time"}
+          onSelect={selection => {
+            this.setState({ selectedTime: selection.toString() });
           }}
-          selectedColor="#2089dc"
-          selectedTextColor="white"
         />
         <Text>Tracking Distance Interval (in km):</Text>
-        <PickerButton
-          data={["1", "5", "10", "50", "100"]}
-          onSelection={selected => {
-            this.setState({ selectedDistance: selected });
+        <NumberPicker
+          min={1}
+          max={100}
+          title={"distance"}
+          onSelect={selection => {
+            this.setState({ selectedDistance: selection.toString() });
           }}
-          selectedColor="#2089dc"
-          selectedTextColor="white"
         />
         <CheckBox
           title="Send notifications?"
@@ -44,13 +51,13 @@ class Settings extends Component {
               styles.bottomButton,
               {
                 backgroundColor:
-                  this.state.selectedTime === 0 ||
-                  this.state.selectedDistance === 0
+                  this.state.selectedTime === "0" ||
+                  this.state.selectedDistance === "0"
                     ? "grey"
                     : "#2089dc",
                 borderColor:
-                  this.state.selectedTime === 0 ||
-                  this.state.selectedDistance === 0
+                  this.state.selectedTime === "0" ||
+                  this.state.selectedDistance === "0"
                     ? "grey"
                     : "#2089dc"
               }
