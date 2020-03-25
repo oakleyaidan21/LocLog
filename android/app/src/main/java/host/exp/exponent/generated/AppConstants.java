@@ -27,10 +27,11 @@ public class AppConstants {
           
           
           
+          
           // ADD EMBEDDED RESPONSES HERE
           // START EMBEDDED RESPONSES
           embeddedResponses.add(new Constants.EmbeddedResponse("https://exp.host/@carrotcake/logLoc", "assets://shell-app-manifest.json", "application/json"));
-          embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40carrotcake%2FlogLoc%2F1.0.2%2F6f72e6c827486f140ad20ac18d6a1289-36.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
+          embeddedResponses.add(new Constants.EmbeddedResponse("https://d1wp6m56sqw74a.cloudfront.net/%40carrotcake%2FlogLoc%2F1.0.2%2F2394c7d1ead6a6e02f35740f70795406-36.0.0-android.js", "assets://shell-app.bundle", "application/javascript"));
           // END EMBEDDED RESPONSES
     EMBEDDED_RESPONSES = embeddedResponses;
   }
