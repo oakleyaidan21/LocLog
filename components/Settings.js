@@ -24,14 +24,15 @@ class Settings extends Component {
       <View style={styles.mainContainer}>
         <Text>Tracking Time Interval (in minutes):</Text>
         <NumberPicker
-          min={1}
+          min={15}
           max={720}
           title={"time"}
           onSelect={selection => {
             this.setState({ selectedTime: selection.toString() });
           }}
+          selectionColor={"#2089dc"}
         />
-        <Text>Tracking Distance Interval (in km):</Text>
+        {/* <Text>Tracking Distance Interval (in km):</Text>
         <NumberPicker
           min={1}
           max={100}
@@ -39,7 +40,7 @@ class Settings extends Component {
           onSelect={selection => {
             this.setState({ selectedDistance: selection.toString() });
           }}
-        />
+        /> */}
         <CheckBox
           title="Send notifications?"
           checked={this.state.checked}
@@ -51,15 +52,9 @@ class Settings extends Component {
               styles.bottomButton,
               {
                 backgroundColor:
-                  this.state.selectedTime === "0" ||
-                  this.state.selectedDistance === "0"
-                    ? "grey"
-                    : "#2089dc",
+                  this.state.selectedTime === "0" ? "grey" : "#2089dc",
                 borderColor:
-                  this.state.selectedTime === "0" ||
-                  this.state.selectedDistance === "0"
-                    ? "grey"
-                    : "#2089dc"
+                  this.state.selectedTime === "0" ? "grey" : "#2089dc"
               }
             ]}
             onPress={() => {
@@ -71,15 +66,12 @@ class Settings extends Component {
               );
               this.props.hide();
             }}
-            disabled={
-              this.state.selectedTime === "0" ||
-              this.state.selectedDistance === "0"
-            }
+            disabled={this.state.selectedTime === "0"}
           >
             <Text style={{ color: "white" }}>Apply</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.bottomButton}
+            style={[styles.bottomButton, { borderWidth: 1 }]}
             onPress={() => {
               //do nothing, cancel
               this.props.hide();
@@ -103,7 +95,6 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   bottomButton: {
-    borderWidth: 1,
     borderRadius: 5,
     padding: 15,
     margin: 5

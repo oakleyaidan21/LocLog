@@ -64,13 +64,19 @@ class MainView extends Component {
           }
         };
         if (checked) {
-          await Notifications.presentLocalNotificationAsync(noti);
+          try {
+            await Notifications.presentLocalNotificationAsync(noti);
+            console.log("sending notification");
+          } catch (error) {
+            console.log("error sending notification", error);
+          }
         }
-
-        //add to state
-        this.setState({ locations: newLocations, timeInterval: minutes });
+        // add to state
+        // shouldn't do this since the state can be unmounted
+        // this.setState({ locations: newLocations, timeInterval: minutes });
       });
     }, minutes * 60000); //60 minutes will be the default
+    this.setState({ timeInterval: minutes });
   };
 
   onFirstOpen = async () => {
@@ -101,18 +107,24 @@ class MainView extends Component {
 
   oneTimeLocation = async () => {
     this.setState({ addingLocation: true });
-    await Location.getCurrentPositionAsync({}).then(async loc => {
-      let newLocations = this.state.locations;
-      newLocations.push(loc);
-      //add to asyncStorage
-      try {
-        await AsyncStorage.setItem("locations", JSON.stringify(newLocations));
-      } catch (error) {
-        console.log("error adding one time location", error);
-      }
-      //add to state
-      this.setState({ locations: newLocations, addingLocation: false });
-    });
+    try {
+      await Location.getCurrentPositionAsync({}).then(async loc => {
+        let newLocations = this.state.locations;
+        newLocations.unshift(loc);
+        //add to asyncStorage
+        try {
+          await AsyncStorage.setItem("locations", JSON.stringify(newLocations));
+        } catch (error) {
+          console.log("error adding one time location", error);
+          this.setState({ addingLocation: false });
+        }
+        //add to state
+        this.setState({ locations: newLocations, addingLocation: false });
+      });
+    } catch (error) {
+      console.log("error getting one time location", error);
+      this.setState({ addingLocation: false });
+    }
   };
 
   componentDidMount = async () => {
@@ -305,7 +317,8 @@ class MainView extends Component {
         )}
         <View style={styles.status}>
           <Text style={{ color: "white" }}>
-            Set to update every {this.state.timeInterval} minutes
+            Set to update every {this.state.timeInterval}{" "}
+            {this.state.timeInterval === 1 ? "minute" : "minutes"}
           </Text>
         </View>
       </View>
