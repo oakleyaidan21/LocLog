@@ -46,6 +46,7 @@ class Settings extends Component {
           checked={this.state.checked}
           onPress={() => this.setState({ checked: !this.state.checked })}
         />
+        <Text>'Apply' will reset the current timer</Text>
         <View style={styles.bottomButtonContainer}>
           <TouchableOpacity
             style={[

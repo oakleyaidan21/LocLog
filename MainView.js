@@ -63,6 +63,7 @@ class MainView extends Component {
             icon: "./assets/icon.png"
           }
         };
+
         if (checked) {
           try {
             await Notifications.presentLocalNotificationAsync(noti);
