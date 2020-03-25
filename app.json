@@ -21,7 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.carrotcake.logloc",
-      "buildNumber": "3",
+      "buildNumber": "2",
       "infoPlist": {
         "UIBackgroundModes": ["location", "fetch"]
       },
