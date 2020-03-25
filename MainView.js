@@ -68,7 +68,7 @@ class MainView extends Component {
         }
 
         //add to state
-        this.setState({ locations: newLocations });
+        this.setState({ locations: newLocations, timeInterval: minutes });
       });
     }, minutes * 60000); //60 minutes will be the default
   };
@@ -80,6 +80,7 @@ class MainView extends Component {
     alert(
       "Your location will be marked down every 60 minutes. You can change this using the settings modal in the top left."
     );
+    this.setState({ timeInterval: 60 });
   };
 
   convertToCSV = () => {
@@ -287,6 +288,7 @@ class MainView extends Component {
           )}
         </View>
         {this.state.locations.length > 0 && (
+          // plus button
           <TouchableOpacity
             style={styles.plusButton}
             onPress={() => {
@@ -301,6 +303,11 @@ class MainView extends Component {
             )}
           </TouchableOpacity>
         )}
+        <View style={styles.status}>
+          <Text style={{ color: "white" }}>
+            Set to update every {this.state.timeInterval} minutes
+          </Text>
+        </View>
       </View>
     );
   }
@@ -320,6 +327,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#2089dc",
     alignItems: "center",
     justifyContent: "center"
+  },
+  status: {
+    width: 150,
+    backgroundColor: "#2089dc",
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    borderRadius: 5,
+    padding: 5
   }
 });
 

@@ -24,7 +24,7 @@ class Settings extends Component {
       <View style={styles.mainContainer}>
         <Text>Tracking Time Interval (in minutes):</Text>
         <NumberPicker
-          min={15}
+          min={1}
           max={720}
           title={"time"}
           onSelect={selection => {
