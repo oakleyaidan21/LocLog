@@ -40,8 +40,6 @@
 		B5DB047E1F3A684600E91581 /* shell-app-manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "shell-app-manifest.json"; sourceTree = "<group>"; };
 		B5DB047F1F3A684600E91581 /* shell-app.bundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "shell-app.bundle"; sourceTree = "<group>"; };
 		C4A88D15726AD99E8A257BC7 /* libPods-logloc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-logloc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		826C634973234B7E907F70B2 /* RangeSlider.xcodeproj */ = {isa = PBXFileReference; name = "RangeSlider.xcodeproj"; path = "../node_modules/react-native-range-slider/ios/RangeSlider.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		8C385660625A4296B7301193 /* libRangeSlider.a */ = {isa = PBXFileReference; name = "libRangeSlider.a"; path = "libRangeSlider.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,8 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBB8117C1BFA0514F79CAF74 /* libPods-logloc.a in Frameworks */,
-				93F7B84F1B494CF58C935A30 /* libRangeSlider.a in Frameworks */,
+				EBB8117C1BFA0514F79CAF74 /* libPods-logloc.a in Frameworks */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,9 +120,7 @@
 		};
 		690131782EAC40FB80E1BD84 /* Libraries */ = {
 			isa = "PBXGroup";
-			children = (
-				826C634973234B7E907F70B2 /* RangeSlider.xcodeproj */,
-			);
+			children = ();
 			name = Libraries;
 			sourceTree = "<group>";
 			path = "";
